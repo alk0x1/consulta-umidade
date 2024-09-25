@@ -1,85 +1,116 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Weather API - Verificação de Umidade com Alerta
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Esta aplicação backend permite ao usuário consultar a umidade de uma localização específica, utilizando a API do OpenWeather. Se a umidade atual for maior que o valor informado pelo usuário, um alerta será gerado.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Funcionalidades
 
-## Description
+- Receber um valor de umidade e uma localização (latitude e longitude).
+- Consultar a API do OpenWeather para obter a umidade atual do local informado.
+- Comparar o valor de umidade retornado pela API com o valor informado pelo usuário.
+- Retornar um alerta se o valor da API for maior, ou uma mensagem informando que a umidade está dentro do limite.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologias Utilizadas
 
-## Project setup
+- **Node.js** com **TypeScript**
+- **NestJS** - Framework usado para estruturar a aplicação
+- **Axios** - Para fazer requisições HTTP
+- **OpenWeather API** - API usada para consultar os dados de umidade
+- **Swagger** - Para documentação e teste da API
+- **Jest** - Para testes unitários
 
-```bash
-$ npm install
+## Pré-requisitos
+
+- **Node.js** (versão 14 ou superior)
+- **npm** (ou **yarn**)
+- Conta na [OpenWeather](https://openweathermap.org/api) para obter uma chave de API.
+
+## Instalação
+
+1. Clone este repositório:
+    ```bash
+    git clone https://github.com/seu-usuario/weather-api.git
+    cd weather-api
+    ```
+
+2. Instale as dependências do projeto:
+    ```bash
+    npm install
+    ```
+
+3. Crie um arquivo `.env` na raiz do projeto com a sua chave de API do OpenWeather:
+    ```bash
+    OPENWEATHER_API_KEY=your_openweather_api_key
+    ```
+
+4. Inicie a aplicação:
+    ```bash
+    npm run start
+    ```
+
+## Endpoints
+
+### Verificar Umidade
+
+#### POST `/weather/check-humidity`
+
+Este endpoint recebe um valor de umidade e uma localização (latitude e longitude). Ele consulta a API do OpenWeather para obter a umidade atual e retorna uma mensagem comparando os valores.
+
+#### Exemplo de Requisição:
+
+```json
+{
+  "humidity": 60,
+  "latitude": -25.42778,
+  "longitude": -49.27306
+}
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+#### Exemplo de Resposta (Alerta):
+```json
+{
+  "message": "Alerta: A umidade atual é de 70%, que é maior que o valor informado de 60%",
+}
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+#### Exemplo de Resposta (Dentro do Limite):
+```json
+{
+  "message": "A umidade atual é de 50%, que está dentro do limite informado de 60%",
+}
 ```
 
-## Resources
+## Documentação da API (Swagger)
+A documentação gerada automaticamente pode ser acessada em:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+http://localhost:3000/api-docs
+```
+Você pode visualizar todos os endpoints, parâmetros e testar as requisições diretamente na interface do Swagger.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Testes
+Para rodar os testes unitários, utilize o comando:
+```bash
+npm run test
+```
 
-## Support
+## Estrutura do Projeto
+```
+src/
+│
+├── controllers/
+│   └── openweather.controller.ts  # Controller responsável pelos endpoints de consulta de umidade
+│
+├── dto/
+│   └── get-humidity.dto.ts  # Data Transfer Object para receber os parâmetros de umidade e localização
+│
+├── services/
+│   └── openweather.service.ts  # Serviço responsável pela integração com a API do OpenWeather
+│
+├── tests/
+│   └── openweather.controller.spec.ts  # Testes unitários do controller
+│
+├── main.ts  # Arquivo principal que inicia a aplicação e configura o Swagger
+│
+└── app.module.ts  # Módulo principal do NestJS que organiza os controllers e serviços
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
