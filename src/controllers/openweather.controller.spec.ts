@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { OpenWeatherController } from './openweather.controller';
 import { OpenWeatherService } from '../services/openweather.service';
 import { GetHumidityDto } from '../dto/get-humidity.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 describe('OpenWeatherController', () => {
   let openWeatherController: OpenWeatherController;
@@ -61,6 +62,43 @@ describe('OpenWeatherController', () => {
         message:
           'A umidade atual é de 50%, que está dentro do limite informado de 60%',
       });
+    });
+  });
+
+  describe('checkHumidity - Error Handling', () => {
+    it('should throw an exception if the OpenWeather API fails', async () => {
+      const humidityDto: GetHumidityDto = {
+        humidity: 60,
+        latitude: -25.42778,
+        longitude: -49.27306,
+      };
+
+      jest
+        .spyOn(openWeatherService, 'getHumidity')
+        .mockRejectedValue(
+          new HttpException(
+            'Erro ao consultar a API OpenWeather',
+            HttpStatus.SERVICE_UNAVAILABLE,
+          ),
+        );
+
+      await expect(
+        openWeatherController.checkHumidity(humidityDto),
+      ).rejects.toThrow('Erro ao consultar a API OpenWeather');
+    });
+
+    it('should throw an exception if humidity is not found in the API response', async () => {
+      const humidityDto: GetHumidityDto = {
+        humidity: 60,
+        latitude: -25.42778,
+        longitude: -49.27306,
+      };
+
+      jest.spyOn(openWeatherService, 'getHumidity').mockResolvedValue(null);
+
+      await expect(
+        openWeatherController.checkHumidity(humidityDto),
+      ).rejects.toThrow('Umidade não encontrada na resposta da API');
     });
   });
 });

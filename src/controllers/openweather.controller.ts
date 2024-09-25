@@ -1,4 +1,11 @@
-import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { OpenWeatherService } from '../services/openweather.service';
 import { GetHumidityDto } from '../dto/get-humidity.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
@@ -30,6 +37,12 @@ export class OpenWeatherController {
       latitude,
       longitude,
     );
+    if (currentHumidity === null || currentHumidity === undefined) {
+      throw new HttpException(
+        'Umidade não encontrada na resposta da API',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     if (currentHumidity > humidity) {
       return {
